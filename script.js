@@ -1,39 +1,69 @@
-//computer has 3 options
-var gameOptions = [
-    'Rock',
-    'Paper',
-    'Scissors'
-];
-//computer chooses randomly between this options
-function computerPlay(){
-var randomOption = gameOptions[Math.floor(Math.random()*gameOptions.length)];
-return randomOption;
+const pcChoiceDisplay = document.getElementById('pc-choice');
+const userChoiceDisplay = document.getElementById('user-choice');
+const resultDisplay = document.getElementById('result');
+const possibleChoices = document.querySelectorAll('button');
+const finalResultDisplay = document.getElementById('final-result');
+
+const choices = ['Rock', 'Paper', 'Scissors']
+
+
+let userChoice
+let pcChoice
+let result
+
+let userScore = 0
+let pcScore = 0
+
+const userScoreDisplay = document.querySelector('#user-score');
+userScoreDisplay.textContent = `Your score: ${userScore}`;
+
+const pcScoreDisplay = document.querySelector('#pc-score');
+pcScoreDisplay.textContent = `PC Score: ${pcScore}`;
+
+possibleChoices.forEach(possibleChoice => possibleChoice.addEventListener('click', (e) => {
+    userChoice = e.target.id;
+    userChoiceDisplay.innerHTML = userChoice
+    generatePcChoice();
+    getResult();
+    finalResult();
+}))
+
+const generatePcChoice = () => {
+    pcChoice = choices[Math.floor(Math.random() * choices.length)];
+    pcChoiceDisplay.innerHTML = pcChoice;
 }
-//output the result
 
-let playerSelection = 'Rock';
-console.log(playerSelection);
-let computerSelection 
 
-function playRound (playerSelection, computerSelection) {
-    computerSelection = computerPlay();
-    console.log (computerSelection);
-    if (computerSelection === playerSelection ) {
-    return 'empate';
-    } else if (computerSelection === 'Scissors' ) {
-        return 'Ganaste, Rock destruye Scissors';
-    } else if (computerSelection === 'Paper' ) {
-        return 'Perdiste, Paper tapa Rock'
+function getResult() {
+    if (pcChoice === userChoice) {
+        result = 'It\'s a draw';
+    } else if (pcChoice === 'Rock' && userChoice === 'Scissors' || pcChoice === 'Paper' && userChoice === 'Rock' || pcChoice === 'Scissors' && userChoice === 'Paper') {
+        result = 'You Loose';
+        pcScore++;
     } else {
-        return "error"
+        result = 'You Win';
+        userScore++;
+    }
+    userScoreDisplay.textContent = `Your score: ${userScore}`;
+    pcScoreDisplay.textContent = `PC Score: ${pcScore}`;
+    resultDisplay.innerHTML = result
+}
+
+function finalResult() {
+    if (pcScore === 5) {
+        finalResultDisplay.textContent = `Perdiste todo todo todo`;
+        console.log(finalResultDisplay);
+        disableButtons();
+    }
+
+    if (userScore === 5) {
+        finalResultDisplay.textContent = `Lo Ganaster todo baby`;
+        disableButtons();
     }
 }
 
-function game() {
-    for ( let i=1; i<=5; i++){
-        let intento = playRound(playerSelection,computerSelection)
-        console.log( 'Juego' + ' ' + i + ' - ' + intento);
-    }
+function disableButtons() {
+    possibleChoices.forEach(elem => {
+        elem.disabled = true
+    })
 }
-
-console.log(game());
